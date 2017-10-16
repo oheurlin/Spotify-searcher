@@ -35,7 +35,6 @@ class SpotifySearch(object):
                 if '[' in title_str:
                     title_str = title_str.split('[')[0]
                 if '</li>' not in title_str:
-                    print(title_str)
                     artist_search = title_str.split(' - ')[0].rstrip()
                     track_search = title_str.split(' - ')[1].rstrip()
                     result = sp.search(track_search, limit=1, offset=0, type='track', market=None)
