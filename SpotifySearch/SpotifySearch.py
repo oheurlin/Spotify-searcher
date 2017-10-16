@@ -17,8 +17,8 @@ class SpotifySearch(object):
         containers = page_soup.find('ol')
         file = open('SpotifySearch_' + (url.split('com/w/')[1]) + '.txt', 'w')
 
-        client_id = '20436e7acc0a4000b7992fbd3f96e6d4'
-        client_secret = '60b6894b52944696a0be82e122d61042'
+        client_id = 'XXXXXXXXXXXXXXXXXXXXXXXXX'
+        client_secret = 'XXXXXXXXXXXXXXXXXXXXXXXXXX'
         redirect_uri = 'http://localhost:8888/callback'
 
         client_credentials_manager = SpotifyClientCredentials(client_id, client_secret)
