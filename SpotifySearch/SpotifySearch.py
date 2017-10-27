@@ -26,19 +26,18 @@ class SpotifySearch(object):
             div = page_soup.find('div', {"class": "list"})
             num = 0
             for div in div.findAll('div', {"class": "list-track"}):
-                print(div.text)
                 containers.insert(num, div.text)
                 num =+ 1
+        filename = 'SpotifySearch_' + (url.split('com/w/')[1]) + '.txt'
+        file = open(filename, 'w')
 
-        file = open('SpotifySearch_' + (url.split('com/w/')[1]) + '.txt', 'w')
-
-        client_id = 'INSERT_YOUR_SPOTIFY_API_CLIENT_ID'
-        client_secret = 'INSERT_YOUR_SPOTIFY_API_CLIENT_SECRET'
+        client_id = 'YOUR_SPOTIFY_API_CLIENT_ID'
+        client_secret = 'YOUR_SPOTIFY_API_CLIENT_SECRET'
         redirect_uri = 'http://localhost:8888/callback'
 
         client_credentials_manager = SpotifyClientCredentials(client_id, client_secret)
         sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
-        username = 'oshe001'
+        username = 'YOUR_SPOTIFY_USERNAME'
         scope='playlist-read-private'
         token = util.prompt_for_user_token(username, scope, client_id, client_secret, redirect_uri)
 
@@ -59,5 +58,6 @@ class SpotifySearch(object):
                         file.write(artist + ' - ' + track + '\n')
                     else:
                         file.write('UNIDENTIFIED: ' + title_str.rstrip() + '\n')
+            print('Finished search, see results in: ' + filename)
         else:
             print("Can't get token for", username)
