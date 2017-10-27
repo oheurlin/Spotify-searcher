@@ -14,11 +14,26 @@ class SpotifySearch(object):
         page_html = client.read()
         client.close()
         page_soup = soup(page_html, "html.parser")
-        containers = page_soup.find('ol')
+        containers = []
+
+        if page_soup.find('ol'):
+           ol = page_soup.find('ol')
+           num = 0
+           for li in ol.findAll('li'):
+               containers.insert(num, li.text)
+               num =+ 1
+        elif page_soup.find('div', {"class": "list"}):
+            div = page_soup.find('div', {"class": "list"})
+            num = 0
+            for div in div.findAll('div', {"class": "list-track"}):
+                print(div.text)
+                containers.insert(num, div.text)
+                num =+ 1
+
         file = open('SpotifySearch_' + (url.split('com/w/')[1]) + '.txt', 'w')
 
-        client_id = 'XXXXXXXXXXXXXXXXXXXXXXXXX'
-        client_secret = 'XXXXXXXXXXXXXXXXXXXXXXXXXX'
+        client_id = 'INSERT_YOUR_SPOTIFY_API_CLIENT_ID'
+        client_secret = 'INSERT_YOUR_SPOTIFY_API_CLIENT_SECRET'
         redirect_uri = 'http://localhost:8888/callback'
 
         client_credentials_manager = SpotifyClientCredentials(client_id, client_secret)
@@ -27,14 +42,14 @@ class SpotifySearch(object):
         scope='playlist-read-private'
         token = util.prompt_for_user_token(username, scope, client_id, client_secret, redirect_uri)
 
-        if token:
+        if token and containers:
             for container in containers:
-                title_str = str(container).split('] ')[1]
-                if 'amp;' in title_str:
-                    title_str = re.sub('[amp;]', '', title_str)
-                if '[' in title_str:
-                    title_str = title_str.split('[')[0]
-                if '</li>' not in title_str:
+                if '] ' in container and '] ?' not in container:
+                    title_str = str(container).split('] ')[1]
+                    if 'amp;' in title_str:
+                        title_str = re.sub('[amp;]', '', title_str)
+                    if '[' in title_str:
+                        title_str = title_str.split('[')[0]
                     artist_search = title_str.split(' - ')[0].rstrip()
                     track_search = title_str.split(' - ')[1].rstrip()
                     result = sp.search(track_search, limit=1, offset=0, type='track', market=None)
